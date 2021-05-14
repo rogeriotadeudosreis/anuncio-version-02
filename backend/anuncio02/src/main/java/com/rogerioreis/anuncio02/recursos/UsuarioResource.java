@@ -3,6 +3,8 @@ package com.rogerioreis.anuncio02.recursos;
 import java.net.URI;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,21 +40,17 @@ public class UsuarioResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<UsuarioDto> create(@RequestBody Usuario usuario) {
+	public ResponseEntity<UsuarioDto> create(@RequestBody Usuario usuario, HttpServletResponse response) {
+		service.inserirUsuario(usuario);
 
-		try {
-			service.inserirUsuario(usuario);
-			UsuarioDto dto = new UsuarioDto(usuario);
-			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId())
-					.toUri();
-			return ResponseEntity.created(uri).body(dto);
-		} catch (Exception e) {
-			return ResponseEntity.unprocessableEntity().build();
-		}
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(usuario.getId()).toUri();
+		response.setHeader("Location", uri.toASCIIString());
+		UsuarioDto dto = new UsuarioDto(usuario);
+		return ResponseEntity.created(uri).body(dto);
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public void deletarUsuario(@PathVariable ("id")Long id) {
+	public void deletarUsuario(@PathVariable("id") Long id) {
 		service.delete(id);
 	}
 
