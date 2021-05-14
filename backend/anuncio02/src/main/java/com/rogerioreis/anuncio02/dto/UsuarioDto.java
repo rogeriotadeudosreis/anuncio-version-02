@@ -19,6 +19,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UsuarioDto {
 
+	@EqualsAndHashCode.Include
 	private Long id;
 	private String nome;
 	private String email;
@@ -36,5 +37,6 @@ public class UsuarioDto {
 		this.status = usuario.getStatus();
 		this.dtCadastro = usuario.getDtCadastro();
 	}
+	
 
 }

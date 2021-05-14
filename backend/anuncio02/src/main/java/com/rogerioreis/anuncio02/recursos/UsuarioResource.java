@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rogerioreis.anuncio02.dto.UsuarioDto;
 import com.rogerioreis.anuncio02.entidades.Usuario;
 import com.rogerioreis.anuncio02.servicos.UsuarioService;
 
@@ -24,29 +26,34 @@ public class UsuarioResource {
 	private UsuarioService service;
 
 	@GetMapping
-	public ResponseEntity<List<Usuario>> listarUsuarios() {
-		List<Usuario> list = service.ListarUsuarios();
+	public ResponseEntity<List<UsuarioDto>> getAll() {
+		List<UsuarioDto> list = service.ListarUsuarios();
 		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Usuario> buscarPorCodigo(@PathVariable("id") Long id) {
-		Usuario usuario = service.buscarPorId(id);
-		return ResponseEntity.ok().body(usuario);
+	public ResponseEntity<UsuarioDto> getById(@PathVariable("id") Long id) {
+		UsuarioDto usuarioDto = service.buscarPorId(id);
+		return ResponseEntity.ok().body(usuarioDto);
 	}
 
 	@PostMapping
-	public ResponseEntity<Usuario> inserirAnuncio(@RequestBody Usuario usuario) {
-		Usuario usuarioCriado;
+	public ResponseEntity<UsuarioDto> create(@RequestBody Usuario usuario) {
+
 		try {
-			usuarioCriado = service.inserirUsuario(usuario);
-			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-					.buildAndExpand(usuarioCriado.getId()).toUri();
-			return ResponseEntity.created(uri).body(usuarioCriado);
+			service.inserirUsuario(usuario);
+			UsuarioDto dto = new UsuarioDto(usuario);
+			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId())
+					.toUri();
+			return ResponseEntity.created(uri).body(dto);
 		} catch (Exception e) {
 			return ResponseEntity.unprocessableEntity().build();
 		}
-
+	}
+	
+	@DeleteMapping("/{id}")
+	public void deletarUsuario(@PathVariable ("id")Long id) {
+		service.delete(id);
 	}
 
 }
