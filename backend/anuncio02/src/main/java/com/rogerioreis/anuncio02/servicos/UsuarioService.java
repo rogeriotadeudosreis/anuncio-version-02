@@ -2,6 +2,7 @@ package com.rogerioreis.anuncio02.servicos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,9 @@ public class UsuarioService {
 	}
 
 	public UsuarioDto buscarPorId(Long id) {
-		Usuario usuario = repository.findById(id).get();
-		UsuarioDto dto = new UsuarioDto(); 
-		return mapper.map(usuario, dto.getClass());
+		Optional<Usuario> usuarioOptional = repository.findById(id);
+		Usuario usuario = usuarioOptional.orElseThrow();
+		return mapper.map(usuario, UsuarioDto.class);
 	}
 
 	public UsuarioDto inserirUsuario(Usuario usuario) {
@@ -58,6 +59,7 @@ public class UsuarioService {
 	}
 	
 	public void delete(Long id) {
+		
 		repository.deleteById(id);
 	}
 }
