@@ -5,6 +5,9 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/*
+ * Esta classe faz o mapeamento entre entidades e entidades DTO.
+ */
 @Configuration
 public class ModelMapperConfig {
 

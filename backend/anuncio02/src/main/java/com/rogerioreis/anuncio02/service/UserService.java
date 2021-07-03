@@ -1,5 +1,7 @@
 package com.rogerioreis.anuncio02.service;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,16 +9,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.rogerioreis.anuncio02.dto.UserDto;
 import com.rogerioreis.anuncio02.entity.User;
-import com.rogerioreis.anuncio02.exceptions.AnuncioExceptionHandler;
+import com.rogerioreis.anuncio02.exceptions.ConstraintException;
+import com.rogerioreis.anuncio02.exceptions.ObjectAlreadyExistsException;
+import com.rogerioreis.anuncio02.exceptions.ObjectNotFoundException;
 import com.rogerioreis.anuncio02.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Autowired
 	private UserRepository repository;
@@ -27,42 +33,41 @@ public class UserService {
 	/*
 	 * Buscando uma lista de usuários na base de dados
 	 */
-	public List<UserDto> listUsers() {
+	public List<User> listUsers() {
 
-		List<User> listUsersDataBase = repository.findAll();
+		List<User> listUsersDataBase = repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
 
 		if (listUsersDataBase.isEmpty()) {
-			throw new AnuncioExceptionHandler("A lista de usuários está vazia.");
+			throw new ObjectNotFoundException("A lista de usuários está vazia.");
 		}
 
-		List<UserDto> listUsersDto = new ArrayList<>();
-
-		for (User user : listUsersDataBase) {
-
-			listUsersDto.add(new UserDto(user));
-		}
-
-		return listUsersDto;
+		return listUsersDataBase;
 	}
 
 	/*
 	 * Criando um usuário na base de dados
 	 */
-	public UserDto createUser(User user) {
+	public User createUser(User user) {
 
-		this.verifyEmailExistence(user.getEmail());
+		verifyDateValidInsert(user.getDtRegister(), user.getDtRegisterUpdate());
 
-		User userSaveDataBase = new User();
-		userSaveDataBase.setName(user.getName());
-		userSaveDataBase.setEmail(user.getEmail());
-		userSaveDataBase.setPassword(passwordEncoder.encode(user.getPassword()));
-		userSaveDataBase.setProfile(user.getProfile());
-		userSaveDataBase.setActive(user.isActive());
-		userSaveDataBase.setDtRegister(user.getDtRegister());
+		verifyEmailExistence(user.getEmail());
 
-		UserDto userDto = new UserDto(repository.save(userSaveDataBase));
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-		return userDto;
+		return repository.save(user);
+	}
+
+	/*
+	 * Atualizando um usuário
+	 */
+	public User updateUser(User user) {   
+		
+		validUserUpdate(user);
+
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+		return repository.save(user);
 
 	}
 
@@ -77,30 +82,28 @@ public class UserService {
 	/*
 	 * Buscando um usuário pelo id
 	 */
-	public UserDto findById(Long id) {
+	public User findById(Long id) {
 		Optional<User> userOptional = repository.findById(id);
 		verifyUserExistence(id);
-		User user = userOptional.get();
-		return new UserDto(user);
+		return userOptional.get();
 	}
 
 	/*
 	 * Buscando um usuário na base de dados pelo email
 	 */
-	public UserDto findByEmail(String email) {
+	public User findByEmail(String email) {
 
 		if (isValidEmailAddress(email)) {
 
-			try {
-				User userByEmail = new User();
-				userByEmail = repository.findByEmail(email);
-				return new UserDto(userByEmail);
-			} catch (Exception e) {
-				throw new AnuncioExceptionHandler("Não existe nenhum usuário com o email: " + email);
+			Optional<User> userByEmailOptional = repository.findByEmail(email);
+
+			if (!userByEmailOptional.isPresent()) {
+				throw new ObjectNotFoundException("Não existe nenhum usuário com o email: " + email);
 			}
 
+			return userByEmailOptional.get();
 		}
-		throw new AnuncioExceptionHandler("O email: " + email + " não é um email válido");
+		throw new ConstraintException("O email: " + email + " não é um email válido");
 	}
 
 	/*
@@ -108,21 +111,25 @@ public class UserService {
 	 */
 	private void verifyUserExistence(Long id) {
 
+		if (id.equals(null)) {
+			throw new ConstraintException("O id deve ser informato");
+		}
+
 		Optional<User> userDataBase = repository.findById(id);
 
 		if (!userDataBase.isPresent()) {
-			throw new AnuncioExceptionHandler("Usuário com ID: " + id + " não existe");
+			throw new ObjectNotFoundException("Usuário com ID: " + id + " não existe");
 		}
 	}
 
 	/*
 	 * método que verifica se tal email existe na base de dados
 	 */
-	private void verifyEmailExistence(String email) {
+	private void verifyEmailExistence(String email) { 
 
 		if (!isValidEmailAddress(email)) {
 
-			throw new AnuncioExceptionHandler("O email: " + email + " não é um email válido.");
+			throw new ConstraintException("O email: " + email + " não é um email válido.");
 		}
 
 		List<User> listUsers = new ArrayList<>();
@@ -132,7 +139,8 @@ public class UserService {
 		for (User user : listUsers) {
 
 			if (user.getEmail().equalsIgnoreCase(email)) {
-				throw new AnuncioExceptionHandler("O email: " + email + " já existe para o usuário: " + user.getName());
+				throw new ObjectAlreadyExistsException(
+						"O email: " + email + " já existe para o usuário: " + user.getName());
 			}
 		}
 	}
@@ -141,6 +149,10 @@ public class UserService {
 	 * método para saber se a sintaxe do email fornecido pelo usuário é válido.
 	 */
 	private static boolean isValidEmailAddress(String email) {
+
+		if (email.length() < 12) {
+			throw new ConstraintException("O email informado deve ter no mínimo 12 letras.");
+		}
 
 		boolean isEmailValid = false;
 
@@ -154,29 +166,101 @@ public class UserService {
 		}
 		return isEmailValid;
 	}
+	
 
 	/*
 	 * método para buscar uma lista de usuários por nome
 	 */
-	public List<UserDto> listAllUsersByName(String name) {
+	public List<User> listAllUsersByName(String name) {
 
 		List<User> listDataBase = new ArrayList<>();
 
-		listDataBase = repository.findAll();
+		listDataBase = repository.findByName(name);
 
 		if (listDataBase.isEmpty()) {
-			throw new AnuncioExceptionHandler("Nenhum usuário cadastrado no momento");
+			throw new ObjectNotFoundException("Nenhum usuário cadastrado no momento.");
 		}
 
-		List<UserDto> listNamesFind = new ArrayList<>();
+		return listDataBase;
+	}
+	
+
+	/*
+	 * Verifica se a data de cadastro é válida
+	 */
+	private static void verifyDateValidInsert(LocalDate date, LocalDate dateUpdate) {
+
+		if (date.toString().isBlank() || dateUpdate.toString().isBlank()) {
+			throw new ConstraintException("A data de cadastro deve ser informada, verifique.");
+		}
+
+		if (date.isAfter(LocalDate.now()) || date.isBefore(LocalDate.now()) || dateUpdate.isAfter(LocalDate.now())
+				|| dateUpdate.isBefore(LocalDate.now())) {
+			throw new ConstraintException("A data inserida não é uma data válida, verifique.");
+		}
+
+	}
+	
+
+	/*
+	 * Verifica se a data de atualização é válida
+	 */
+	private void verifyDateValidUpdate(LocalDate date) { 
+
+		if (date.toString().isBlank()) {
+			throw new ConstraintException("A data de atualização deve ser informada, verifique.");
+		}
+
+		if (date.isAfter(LocalDate.now()) || date.isBefore(LocalDate.now())) {
+			throw new ConstraintException("A data de atualização inserida não é uma data válida, verifique.");
+		}
+
+	}
+	
+	/*
+	 * Método para validar um usuario no update
+	 */
+
+	private void validUserUpdate(User user) { 
 		
-		for (User user : listDataBase) {
-			if (user.getName().contains(name)) {
-				listNamesFind.add(new UserDto(user));
+		List<User> listUserDataBase = new ArrayList<>();
+		
+		listUserDataBase = repository.findAll();
+		
+		for (User userDataBase : listUserDataBase) {
+			if (!userDataBase.getId().equals(user.getId())
+					&& userDataBase.getEmail().equals(user.getEmail())) {
+				throw new ObjectAlreadyExistsException("Este Email pertence a outro cadastro. Verifique");
 			}
 		}
 		
-		return listNamesFind;
+		isValidEmailAddress(user.getEmail());
+
+		verifyUserExistence(user.getId());
+		
+		verifyDateValidUpdate(user.getDtRegisterUpdate());
+
+		if (user.getName().isBlank()) {
+			throw new ConstraintException("O nome do usuário deve ser informado. Verifique");
+		}
+
+		if (user.getName().length() < 2) {
+			throw new ConstraintException("O nome do usuário deve ter no mínimo 02 letras");
+		}
+		
+		if (user.getPassword().isBlank()) {
+			throw new ConstraintException("A senha deve ser informada. Verifique.");
+		}
+
+		if (user.getPassword().length() < 6) {
+			throw new ConstraintException("A senha informada deve ter no mínimo 6 caracteres. Verifique.");
+		}
+		
+		if (user.getProfile().toString().isBlank()) {
+			throw new ConstraintException("O perfil do usuário deve ser informado. Verifique.");
+		}
+		
+		
 
 	}
 
