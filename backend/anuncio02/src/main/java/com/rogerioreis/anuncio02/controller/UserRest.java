@@ -32,7 +32,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/anuncio02")
 @Api(value = "API anúncio de imóveis protótipo")
 @CrossOrigin(origins = "*")
 public class UserRest {
@@ -42,10 +42,15 @@ public class UserRest {
 	
 	@Autowired
 	private ModelMapper modelMapper;
-
-	@PostMapping
+	
+	@GetMapping(value = "/home")
+	public String home() {
+		return "Aqui é apenas uma página de teste de rota autorizada";
+	}
+	
+	@PostMapping(value = "/user")
 	@ApiOperation(value = "Método de inserir um usuário")
-	public ResponseEntity<UserDto> create(@Valid @RequestBody User user, HttpServletResponse response, BindingResult br) { 
+	public ResponseEntity<UserDto> create(@Valid @RequestBody User user, HttpServletResponse response, BindingResult br) {  
 
 		if (br.hasErrors()) {
 			throw new ConstraintException(br.getAllErrors().get(0).getDefaultMessage());
@@ -54,15 +59,17 @@ public class UserRest {
 		service.createUser(user);
 
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+
 		response.setHeader("Location", uri.toASCIIString());
 		
 		return ResponseEntity.created(uri).body(modelMapper.map(user, UserDto.class));
 
 	}
 
-	@PutMapping(value = "/{id}")
+	@PutMapping(value = "/userupdate/{id}")
 	@ApiOperation(value = "Método para Atualizar um usuário.")
-	public ResponseEntity<UserDto> update(@Valid @PathVariable Long id, @RequestBody User user,HttpServletResponse response, BindingResult br) {  
+	public ResponseEntity<UserDto> update(@Valid @PathVariable("id") Long id, @RequestBody User user,HttpServletResponse response, BindingResult br) { 
+  
 		
 		if (br.hasErrors()) {
 			throw new ConstraintException(br.getAllErrors().get(0).getDefaultMessage());
@@ -77,9 +84,9 @@ public class UserRest {
 		
 	}
 
-	@GetMapping
+	@GetMapping(value ="/user")
 	@ApiOperation(value = "Método para consultar todos usuários na base de dados.")
-	public ResponseEntity<List<UserDto>> getAll() { 
+	public ResponseEntity<List<UserDto>> getAll() {  
 		
 		List<User> list = service.listUsers();
 		
@@ -88,27 +95,28 @@ public class UserRest {
 		return ResponseEntity.ok().body(listDto);
 	}
 
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/userid/{id}")
 	@ApiOperation(value = "Método para consultar um usuário pelo id.")
 	public ResponseEntity<UserDto> getById(@PathVariable("id") Long id) {
+
 		
 		User user = service.findById(id);
 		
 		return ResponseEntity.ok().body(modelMapper.map(user, UserDto.class));
 	}
   
-	@GetMapping(value = "/email/{email}")
+	@GetMapping(value = "/useremail/{email}")
 	@ApiOperation(value = "Método para consultar um usuário pelo email.")
-	public ResponseEntity<UserDto> getByEmail(@PathVariable("email") String email) {
+	public ResponseEntity<UserDto> getByEmail(@PathVariable("email") String email) {  
 		
 		User user = service.findByEmail(email);
 		
 		return ResponseEntity.ok().body(modelMapper.map(user, UserDto.class));
 	}
 
-	@GetMapping(value = "/name/{name}")
+	@GetMapping(value = "/username/{name}")
 	@ApiOperation(value = "Método para consultar um usuário pelo nome.")
-	public ResponseEntity<List<UserDto>> getAllByName(@PathVariable("name") String name) { 
+	public ResponseEntity<List<UserDto>> getAllByName(@PathVariable("name") String name) {   
 		
 		List<User> list = service.listAllUsersByName(name);
 		
@@ -119,9 +127,9 @@ public class UserRest {
 		
 	}
 
-	@DeleteMapping(value = "/{id}")
+	@DeleteMapping(value = "/userdelete/{id}")
 	@ApiOperation(value = "Método para deletar um usuário.")
-	public ResponseEntity<Void> deletarUsuario(@PathVariable("id") Long id) {
+	public ResponseEntity<Void> deletarUsuario(@PathVariable("id") Long id) { 
 		
 		service.delete(id);
 		

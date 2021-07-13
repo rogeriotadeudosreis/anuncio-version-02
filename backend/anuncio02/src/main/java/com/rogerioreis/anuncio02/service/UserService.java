@@ -27,9 +27,6 @@ public class UserService implements Serializable {
 	@Autowired
 	private UserRepository repository;
 
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
-
 	/*
 	 * Buscando uma lista de usuários na base de dados
 	 */
@@ -47,13 +44,13 @@ public class UserService implements Serializable {
 	/*
 	 * Criando um usuário na base de dados
 	 */
-	public User createUser(User user) {
+	public User createUser(User user) { 
 
 		verifyDateValidInsert(user.getDtRegister(), user.getDtRegisterUpdate());
 
 		verifyEmailExistence(user.getEmail());
 
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 
 		return repository.save(user);
 	}
@@ -61,11 +58,11 @@ public class UserService implements Serializable {
 	/*
 	 * Atualizando um usuário
 	 */
-	public User updateUser(User user) {   
+	public User updateUser(User user) {    
 		
 		validUserUpdate(user);
 
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 
 		return repository.save(user);
 
@@ -91,7 +88,7 @@ public class UserService implements Serializable {
 	/*
 	 * Buscando um usuário na base de dados pelo email
 	 */
-	public User findByEmail(String email) {
+	public User findByEmail(String email) { 
 
 		if (isValidEmailAddress(email)) {
 
@@ -125,7 +122,7 @@ public class UserService implements Serializable {
 	/*
 	 * método que verifica se tal email existe na base de dados
 	 */
-	private void verifyEmailExistence(String email) { 
+	private void verifyEmailExistence(String email) {  
 
 		if (!isValidEmailAddress(email)) {
 
@@ -148,7 +145,7 @@ public class UserService implements Serializable {
 	/*
 	 * método para saber se a sintaxe do email fornecido pelo usuário é válido.
 	 */
-	private static boolean isValidEmailAddress(String email) {
+	private static boolean isValidEmailAddress(String email) { 
 
 		if (email.length() < 12) {
 			throw new ConstraintException("O email informado deve ter no mínimo 12 letras.");
@@ -166,7 +163,6 @@ public class UserService implements Serializable {
 		}
 		return isEmailValid;
 	}
-	
 
 	/*
 	 * método para buscar uma lista de usuários por nome
@@ -183,7 +179,6 @@ public class UserService implements Serializable {
 
 		return listDataBase;
 	}
-	
 
 	/*
 	 * Verifica se a data de cadastro é válida
@@ -200,7 +195,6 @@ public class UserService implements Serializable {
 		}
 
 	}
-	
 
 	/*
 	 * Verifica se a data de atualização é válida
@@ -219,9 +213,11 @@ public class UserService implements Serializable {
 	
 	/*
 	 * Método para validar um usuario no update
+	 * 
 	 */
+	private void validUserUpdate(User user) {  
 
-	private void validUserUpdate(User user) { 
+		verifyUserExistence(user.getId());
 		
 		List<User> listUserDataBase = new ArrayList<>();
 		
@@ -235,8 +231,6 @@ public class UserService implements Serializable {
 		}
 		
 		isValidEmailAddress(user.getEmail());
-
-		verifyUserExistence(user.getId());
 		
 		verifyDateValidUpdate(user.getDtRegisterUpdate());
 

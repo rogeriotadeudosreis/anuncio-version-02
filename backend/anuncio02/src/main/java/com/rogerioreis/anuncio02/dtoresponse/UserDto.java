@@ -1,8 +1,10 @@
 package com.rogerioreis.anuncio02.dtoresponse;
 
 import java.io.Serializable;
-import java.time.LocalDate; 
+import java.time.LocalDate;
+import java.util.List;
 
+import com.rogerioreis.anuncio02.entity.Role;
 import com.rogerioreis.anuncio02.entity.User;
 import com.rogerioreis.anuncio02.enumeration.EnumUserProfile;
 
@@ -22,7 +24,9 @@ public class UserDto implements Serializable {
 	private EnumUserProfile profile;
 	private boolean active;
 	private LocalDate dtRegister;
-	private LocalDate dtRegisterUpdate;	
+	private LocalDate dtRegisterUpdate;
+	
+	private List<Role> listRoles;
 
 	public UserDto(User userReturnDataBase) {
 		this.id = userReturnDataBase.getId();
@@ -32,6 +36,8 @@ public class UserDto implements Serializable {
 		this.active = userReturnDataBase.isActive();
 		this.dtRegister = userReturnDataBase.getDtRegister();
 		this.dtRegisterUpdate = userReturnDataBase.getDtRegisterUpdate();
+		this.listRoles = userReturnDataBase.getRoles();
+		
 	}
 
 }

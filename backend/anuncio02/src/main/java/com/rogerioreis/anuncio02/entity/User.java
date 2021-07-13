@@ -2,12 +2,16 @@ package com.rogerioreis.anuncio02.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,15 +24,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "tb_usuario")
+@NoArgsConstructor
+@Table(name = "tb_user")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	@ManyToMany
+	@JoinTable(name = "tb_users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
+	inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "nameRole"))
+	private List<Role> roles;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +46,7 @@ public class User implements Serializable {
 
 	@NotBlank(message = "Nome do usuário é obrigatório.")
 	@Size(min = 2, max = 80, message = "Nome do usuário deve ter entre 2 e 80 letras.")
-	private String name = "";
+	private  String name = "";
 
 	@NotBlank(message = "Email do usuário é obrigatorio.")
 	private String email = "";
