@@ -11,7 +11,7 @@ import com.rogerioreis.anuncio02.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	Optional<User> findByEmail(String email);
+	Optional<User> findByUsername(String email);
 
 	List<User> findByName(String name);
 	

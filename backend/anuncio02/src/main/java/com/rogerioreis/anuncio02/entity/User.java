@@ -49,7 +49,8 @@ public class User implements Serializable {
 	private  String name = "";
 
 	@NotBlank(message = "Email do usuário é obrigatorio.")
-	private String email = "";
+	@Column(name = "username")
+	private String username = "";
 
 	@NotBlank(message = "Senha do usuário é obrigatória.")
 	@Size(min = 6, message = "Senha do usuário deve ter no mínimo 6 caracteres.")
@@ -72,7 +73,7 @@ public class User implements Serializable {
 		super();
 		this.id = user.getId();
 		this.name = user.getName();
-		this.email = user.getEmail();
+		this.username = user.getUsername();
 		this.password = user.getPassword();
 		this.profile = user.getProfile();
 		this.active = user.isActive();

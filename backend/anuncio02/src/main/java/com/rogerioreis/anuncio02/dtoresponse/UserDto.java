@@ -20,7 +20,7 @@ public class UserDto implements Serializable {
 
 	private Long id;
 	private String name;
-	private String email;
+	private String username;
 	private EnumUserProfile profile;
 	private boolean active;
 	private LocalDate dtRegister;
@@ -31,7 +31,7 @@ public class UserDto implements Serializable {
 	public UserDto(User userReturnDataBase) {
 		this.id = userReturnDataBase.getId();
 		this.name = userReturnDataBase.getName();
-		this.email = userReturnDataBase.getEmail();
+		this.username = userReturnDataBase.getUsername();
 		this.profile = userReturnDataBase.getProfile();
 		this.active = userReturnDataBase.isActive();
 		this.dtRegister = userReturnDataBase.getDtRegister();

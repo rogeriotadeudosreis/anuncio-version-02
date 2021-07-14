@@ -48,7 +48,7 @@ public class UserService implements Serializable {
 
 		verifyDateValidInsert(user.getDtRegister(), user.getDtRegisterUpdate());
 
-		verifyEmailExistence(user.getEmail());
+		verifyEmailExistence(user.getUsername());
 
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 
@@ -92,7 +92,7 @@ public class UserService implements Serializable {
 
 		if (isValidEmailAddress(email)) {
 
-			Optional<User> userByEmailOptional = repository.findByEmail(email);
+			Optional<User> userByEmailOptional = repository.findByUsername(email);
 
 			if (!userByEmailOptional.isPresent()) {
 				throw new ObjectNotFoundException("Não existe nenhum usuário com o email: " + email);
@@ -135,7 +135,7 @@ public class UserService implements Serializable {
 
 		for (User user : listUsers) {
 
-			if (user.getEmail().equalsIgnoreCase(email)) {
+			if (user.getUsername().equalsIgnoreCase(email)) {
 				throw new ObjectAlreadyExistsException(
 						"O email: " + email + " já existe para o usuário: " + user.getName());
 			}
@@ -225,12 +225,12 @@ public class UserService implements Serializable {
 		
 		for (User userDataBase : listUserDataBase) {
 			if (!userDataBase.getId().equals(user.getId())
-					&& userDataBase.getEmail().equals(user.getEmail())) {
+					&& userDataBase.getUsername().equals(user.getUsername())) {
 				throw new ObjectAlreadyExistsException("Este Email pertence a outro cadastro. Verifique");
 			}
 		}
 		
-		isValidEmailAddress(user.getEmail());
+		isValidEmailAddress(user.getUsername());
 		
 		verifyDateValidUpdate(user.getDtRegisterUpdate());
 

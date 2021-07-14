@@ -43,9 +43,14 @@ public class UserRest {
 	@Autowired
 	private ModelMapper modelMapper;
 	
-	@GetMapping(value = "/home")
-	public String home() {
-		return "Aqui é apenas uma página de teste de rota autorizada";
+	@PostMapping(value = "/home")
+	public String home() { 
+		return "Aqui é apenas uma página de teste de rota autorizada para a HOME";
+	}
+
+	@PostMapping(value = "/login")
+	public String login() { 
+		return "Aqui é apenas uma página de teste de rota autorizadapara o LOGIN";
 	}
 	
 	@PostMapping(value = "/user")
@@ -86,7 +91,7 @@ public class UserRest {
 
 	@GetMapping(value ="/user")
 	@ApiOperation(value = "Método para consultar todos usuários na base de dados.")
-	public ResponseEntity<List<UserDto>> getAll() {  
+	public ResponseEntity<List<UserDto>> getAll() {   
 		
 		List<User> list = service.listUsers();
 		
@@ -97,7 +102,7 @@ public class UserRest {
 
 	@GetMapping(value = "/userid/{id}")
 	@ApiOperation(value = "Método para consultar um usuário pelo id.")
-	public ResponseEntity<UserDto> getById(@PathVariable("id") Long id) {
+	public ResponseEntity<UserDto> getById(@PathVariable("id") Long id) { 
 
 		
 		User user = service.findById(id);
