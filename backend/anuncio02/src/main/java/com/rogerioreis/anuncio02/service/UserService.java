@@ -1,7 +1,7 @@
 package com.rogerioreis.anuncio02.service;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,11 +44,9 @@ public class UserService implements Serializable {
 	/*
 	 * Criando um usuário na base de dados
 	 */
-	public User createUser(User user) { 
+	public User createUser(User user) {  
 
-		verifyDateValidInsert(user.getDtRegister(), user.getDtRegisterUpdate());
-
-		verifyEmailExistence(user.getUsername());
+		verifyEmailExistence(user.getEmail());
 
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 
@@ -92,7 +90,7 @@ public class UserService implements Serializable {
 
 		if (isValidEmailAddress(email)) {
 
-			Optional<User> userByEmailOptional = repository.findByUsername(email);
+			Optional<User> userByEmailOptional = repository.findByEmail(email);
 
 			if (!userByEmailOptional.isPresent()) {
 				throw new ObjectNotFoundException("Não existe nenhum usuário com o email: " + email);
@@ -135,7 +133,7 @@ public class UserService implements Serializable {
 
 		for (User user : listUsers) {
 
-			if (user.getUsername().equalsIgnoreCase(email)) {
+			if (user.getEmail().equalsIgnoreCase(email)) {
 				throw new ObjectAlreadyExistsException(
 						"O email: " + email + " já existe para o usuário: " + user.getName());
 			}
@@ -167,7 +165,7 @@ public class UserService implements Serializable {
 	/*
 	 * método para buscar uma lista de usuários por nome
 	 */
-	public List<User> listAllUsersByName(String name) {
+	public List<User> listAllUsersByName(String name) { 
 
 		List<User> listDataBase = new ArrayList<>();
 
@@ -181,31 +179,15 @@ public class UserService implements Serializable {
 	}
 
 	/*
-	 * Verifica se a data de cadastro é válida
-	 */
-	private static void verifyDateValidInsert(LocalDate date, LocalDate dateUpdate) {
-
-		if (date.toString().isBlank() || dateUpdate.toString().isBlank()) {
-			throw new ConstraintException("A data de cadastro deve ser informada, verifique.");
-		}
-
-		if (date.isAfter(LocalDate.now()) || date.isBefore(LocalDate.now()) || dateUpdate.isAfter(LocalDate.now())
-				|| dateUpdate.isBefore(LocalDate.now())) {
-			throw new ConstraintException("A data inserida não é uma data válida, verifique.");
-		}
-
-	}
-
-	/*
 	 * Verifica se a data de atualização é válida
 	 */
-	private void verifyDateValidUpdate(LocalDate date) { 
+	private void verifyDateValidUpdate(LocalDateTime date) { 
 
 		if (date.toString().isBlank()) {
 			throw new ConstraintException("A data de atualização deve ser informada, verifique.");
 		}
 
-		if (date.isAfter(LocalDate.now()) || date.isBefore(LocalDate.now())) {
+		if (date.isAfter(LocalDateTime.now()) || date.isBefore(LocalDateTime.now())) {
 			throw new ConstraintException("A data de atualização inserida não é uma data válida, verifique.");
 		}
 
@@ -215,7 +197,7 @@ public class UserService implements Serializable {
 	 * Método para validar um usuario no update
 	 * 
 	 */
-	private void validUserUpdate(User user) {  
+	private void validUserUpdate(User user) {   
 
 		verifyUserExistence(user.getId());
 		
@@ -225,12 +207,12 @@ public class UserService implements Serializable {
 		
 		for (User userDataBase : listUserDataBase) {
 			if (!userDataBase.getId().equals(user.getId())
-					&& userDataBase.getUsername().equals(user.getUsername())) {
+					&& userDataBase.getEmail().equals(user.getEmail())) {
 				throw new ObjectAlreadyExistsException("Este Email pertence a outro cadastro. Verifique");
 			}
 		}
 		
-		isValidEmailAddress(user.getUsername());
+		isValidEmailAddress(user.getEmail());
 		
 		verifyDateValidUpdate(user.getDtRegisterUpdate());
 
@@ -250,7 +232,7 @@ public class UserService implements Serializable {
 			throw new ConstraintException("A senha informada deve ter no mínimo 6 caracteres. Verifique.");
 		}
 		
-		if (user.getProfile().toString().isBlank()) {
+		if (user.getRoles().toString().isBlank()) {
 			throw new ConstraintException("O perfil do usuário deve ser informado. Verifique.");
 		}
 		

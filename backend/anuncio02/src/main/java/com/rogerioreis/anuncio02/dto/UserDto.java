@@ -1,12 +1,12 @@
-package com.rogerioreis.anuncio02.dtoresponse;
+package com.rogerioreis.anuncio02.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.rogerioreis.anuncio02.entity.Role;
 import com.rogerioreis.anuncio02.entity.User;
-import com.rogerioreis.anuncio02.enumeration.EnumUserProfile;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,23 +20,21 @@ public class UserDto implements Serializable {
 
 	private Long id;
 	private String name;
-	private String username;
-	private EnumUserProfile profile;
+	private String email;
+	private List<Role> roles = new ArrayList<>();
 	private boolean active;
-	private LocalDate dtRegister;
-	private LocalDate dtRegisterUpdate;
+	private LocalDateTime dataRegister;
+	private LocalDateTime dataRegisterUpdate;
 	
-	private List<Role> listRoles;
 
 	public UserDto(User userReturnDataBase) {
 		this.id = userReturnDataBase.getId();
 		this.name = userReturnDataBase.getName();
-		this.username = userReturnDataBase.getUsername();
-		this.profile = userReturnDataBase.getProfile();
+		this.email = userReturnDataBase.getEmail();
+		this.roles = userReturnDataBase.getRoles();
 		this.active = userReturnDataBase.isActive();
-		this.dtRegister = userReturnDataBase.getDtRegister();
-		this.dtRegisterUpdate = userReturnDataBase.getDtRegisterUpdate();
-		this.listRoles = userReturnDataBase.getRoles();
+		this.dataRegister = userReturnDataBase.getDtRegister();
+		this.dataRegisterUpdate = userReturnDataBase.getDtRegisterUpdate();
 		
 	}
 

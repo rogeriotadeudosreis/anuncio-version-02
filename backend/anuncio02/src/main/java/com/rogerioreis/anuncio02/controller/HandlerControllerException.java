@@ -1,22 +1,22 @@
 package com.rogerioreis.anuncio02.controller;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.rogerioreis.anuncio02.exceptions.ConstraintException;
 import com.rogerioreis.anuncio02.exceptions.ObjectAlreadyExistsException;
 import com.rogerioreis.anuncio02.exceptions.ObjectNotFoundException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class HandlerControllerException {
 	
-	Date dateSystem = new Date(System.currentTimeMillis());
+	LocalDateTime dateSystem = LocalDateTime.now();
 
 	/*
 	 * Esta exceção trata:
@@ -25,9 +25,9 @@ public class HandlerControllerException {
 	 * Entrada de valores inválidos, como por ex: email com a sintaxe incorreta
 	 */
 	@ExceptionHandler(ConstraintException.class)
-	public ResponseEntity<StandarError> handlerInputException(ConstraintException e,
+	public ResponseEntity<StandartError> handlerInputException(ConstraintException e,
 			HttpServletRequest request) {
-		StandarError error = new StandarError(dateSystem, HttpStatus.BAD_REQUEST.value(),
+		StandartError error = new StandartError(dateSystem, HttpStatus.BAD_REQUEST.value(),
 				"Restrição na entrada de dados", e.getMessage(), request.getRequestURI());
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
@@ -41,9 +41,9 @@ public class HandlerControllerException {
 	 *
 	 */
 	@ExceptionHandler(ObjectAlreadyExistsException.class)
-	public ResponseEntity<StandarError> handlerAlreadyExists(ObjectAlreadyExistsException o,
+	public ResponseEntity<StandartError> handlerAlreadyExists(ObjectAlreadyExistsException o,
 			HttpServletRequest request) {
-		StandarError error = new StandarError(dateSystem, HttpStatus.BAD_REQUEST.value(),
+		StandartError error = new StandartError(dateSystem, HttpStatus.BAD_REQUEST.value(),
 				"Integridade de dados", o.getMessage(), request.getRequestURI());
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
@@ -55,9 +55,9 @@ public class HandlerControllerException {
 	 * Valores não encontrados na base de dados
 	 */
 	@ExceptionHandler(ObjectNotFoundException.class)
-	public ResponseEntity<StandarError> handlerObjectNotFound(ObjectNotFoundException o,
+	public ResponseEntity<StandartError> handlerObjectNotFound(ObjectNotFoundException o,
 			HttpServletRequest request) {
-		StandarError error = new StandarError(dateSystem, HttpStatus.NOT_FOUND.value(),
+		StandartError error = new StandartError(dateSystem, HttpStatus.NOT_FOUND.value(),
 				"Registro não encontrado", o.getMessage(), request.getRequestURI());
 	
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);

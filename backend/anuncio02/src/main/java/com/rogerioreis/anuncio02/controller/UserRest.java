@@ -23,7 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.rogerioreis.anuncio02.dtoresponse.UserDto;
+import com.rogerioreis.anuncio02.dto.UserDto;
+import com.rogerioreis.anuncio02.dto.UserInsertDto;
 import com.rogerioreis.anuncio02.entity.User;
 import com.rogerioreis.anuncio02.exceptions.ConstraintException;
 import com.rogerioreis.anuncio02.service.UserService;
@@ -55,25 +56,27 @@ public class UserRest {
 	
 	@PostMapping(value = "/user")
 	@ApiOperation(value = "Método de inserir um usuário")
-	public ResponseEntity<UserDto> create(@Valid @RequestBody User user, HttpServletResponse response, BindingResult br) {  
+	public ResponseEntity<UserDto> create(@Valid @RequestBody UserInsertDto userInsertDto, HttpServletResponse response, BindingResult br) {    
 
 		if (br.hasErrors()) {
 			throw new ConstraintException(br.getAllErrors().get(0).getDefaultMessage());
 		}
+		
+		User userSave = modelMapper.map(userInsertDto, User.class);
 
-		service.createUser(user);
-
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+		service.createUser(userSave);
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(userSave.getId()).toUri();
 
 		response.setHeader("Location", uri.toASCIIString());
 		
-		return ResponseEntity.created(uri).body(modelMapper.map(user, UserDto.class));
+		return ResponseEntity.created(uri).body(new UserDto(userSave));
 
 	}
 
 	@PutMapping(value = "/userupdate/{id}")
 	@ApiOperation(value = "Método para Atualizar um usuário.")
-	public ResponseEntity<UserDto> update(@Valid @PathVariable("id") Long id, @RequestBody User user,HttpServletResponse response, BindingResult br) { 
+	public ResponseEntity<UserDto> update(@Valid @PathVariable("id") Long id, @RequestBody User user,HttpServletResponse response, BindingResult br) {   
   
 		
 		if (br.hasErrors()) {
@@ -91,7 +94,7 @@ public class UserRest {
 
 	@GetMapping(value ="/user")
 	@ApiOperation(value = "Método para consultar todos usuários na base de dados.")
-	public ResponseEntity<List<UserDto>> getAll() {   
+	public ResponseEntity<List<UserDto>> getAll() {      
 		
 		List<User> list = service.listUsers();
 		

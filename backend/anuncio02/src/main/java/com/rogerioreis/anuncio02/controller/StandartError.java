@@ -1,9 +1,9 @@
 package com.rogerioreis.anuncio02.controller;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
-public class StandarError implements Serializable {
+public class StandartError implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -11,13 +11,13 @@ public class StandarError implements Serializable {
 	private Integer status;
 	private String message;
 	private String path;
-	private Date timestamp;
+	private LocalDateTime timestamp;
 	
-	public StandarError() {
+	public StandartError() {
 		
 	}
 
-	public StandarError(Date timesTamp, Integer status, String error, String message, String path) {
+	public StandartError(LocalDateTime timesTamp, Integer status, String error, String message, String path) {
 		super();
 		this.timestamp = timesTamp;
 		this.status = status;
@@ -26,7 +26,7 @@ public class StandarError implements Serializable {
 		this.path = path;
 	}
 
-	public Date getTimestamp() {
+	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
 

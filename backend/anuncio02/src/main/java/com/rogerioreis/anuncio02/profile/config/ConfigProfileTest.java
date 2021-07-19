@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("testAnuncio02")
+@Profile("test")
 public class ConfigProfileTest implements ConfigProfile {
 
 	public ConfigProfileTest() {

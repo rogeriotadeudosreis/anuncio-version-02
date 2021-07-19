@@ -1,7 +1,8 @@
 package com.rogerioreis.anuncio02.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -14,10 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.rogerioreis.anuncio02.enumeration.EnumUserProfile;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,10 +32,6 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@ManyToMany
-	@JoinTable(name = "tb_users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
-	inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "nameRole"))
-	private List<Role> roles;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,33 +43,33 @@ public class User implements Serializable {
 	private  String name = "";
 
 	@NotBlank(message = "Email do usuário é obrigatorio.")
-	@Column(name = "username")
-	private String username = "";
+	@Column(name = "email")
+	private String email = "";
 
 	@NotBlank(message = "Senha do usuário é obrigatória.")
 	@Size(min = 6, message = "Senha do usuário deve ter no mínimo 6 caracteres.")
 	private String password = "";
 
-	@NotNull(message = "Perfil do usuário deve ser informado.")
-	private EnumUserProfile profile = EnumUserProfile.ADMINISTRADOR;
-
+	@ManyToMany
+	@JoinTable(name = "tb_users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
+	inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	private List<Role> roles = new ArrayList<>();
+ 
 	private boolean active = false;
 
 	@Column(name = "date_register")
-	@NotNull(message = "Data de cadastro é obrigatória.")
-	private LocalDate dtRegister = LocalDate.now();
+	private LocalDateTime dtRegister = LocalDateTime.now();
 
 	@Column(name = "date_update")
-	@NotNull(message = "Data de atualização é obrigatória.")
-	private LocalDate dtRegisterUpdate = LocalDate.now();
+	private LocalDateTime dtRegisterUpdate = LocalDateTime.now();
 
 	public User(User user) {
 		super();
 		this.id = user.getId();
 		this.name = user.getName();
-		this.username = user.getUsername();
+		this.email = user.getEmail();
 		this.password = user.getPassword();
-		this.profile = user.getProfile();
+		this.roles = user.getRoles();
 		this.active = user.isActive();
 		this.dtRegister = user.getDtRegister();
 		this.dtRegisterUpdate = user.getDtRegisterUpdate();
