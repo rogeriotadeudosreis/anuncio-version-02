@@ -1,6 +1,6 @@
 package com.rogerioreis.anuncio02.enumeration;
 
-public enum EnumPerfil {
+public enum EnumUserProfile {
 	
 	ADMINISTRADOR, VENDEDOR;
 
