@@ -1,7 +1,6 @@
 package com.rogerioreis.anuncio02.service;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,12 +8,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.rogerioreis.anuncio02.entity.User;
-import com.rogerioreis.anuncio02.exceptions.ConstraintException;
+import com.rogerioreis.anuncio02.exceptions.BusinessException;
 import com.rogerioreis.anuncio02.exceptions.ObjectAlreadyExistsException;
 import com.rogerioreis.anuncio02.exceptions.ObjectNotFoundException;
 import com.rogerioreis.anuncio02.repository.UserRepository;
@@ -30,9 +30,10 @@ public class UserService implements Serializable {
 	/*
 	 * Buscando uma lista de usuários na base de dados
 	 */
-	public List<User> listUsers() {
+	public Page<User> listUsers(Pageable pagination) {   
 
-		List<User> listUsersDataBase = repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+
+		Page<User> listUsersDataBase = repository.findAll(pagination);
 
 		if (listUsersDataBase.isEmpty()) {
 			throw new ObjectNotFoundException("A lista de usuários está vazia.");
@@ -44,7 +45,7 @@ public class UserService implements Serializable {
 	/*
 	 * Criando um usuário na base de dados
 	 */
-	public User createUser(User user) {  
+	public User createUser(User user) {       
 
 		verifyEmailExistence(user.getEmail());
 
@@ -56,13 +57,20 @@ public class UserService implements Serializable {
 	/*
 	 * Atualizando um usuário
 	 */
-	public User updateUser(User user) {    
+	public User updateUser(User user) {  
 		
-		validUserUpdate(user);
+		this.validUserUpdate(user);
+		
+		User userDatabase = this.findById(user.getId());
+		
+		userDatabase.setName(user.getName());
+		userDatabase.setEmail(user.getEmail());
+		userDatabase.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+		userDatabase.setProfiles(user.getProfiles());
+		userDatabase.setActive(user.isActive());
+		userDatabase.setDtRegisterUpdate(user.getDtRegisterUpdate());
 
-		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-
-		return repository.save(user);
+		return userDatabase;
 
 	}
 
@@ -77,10 +85,11 @@ public class UserService implements Serializable {
 	/*
 	 * Buscando um usuário pelo id
 	 */
-	public User findById(Long id) {
-		Optional<User> userOptional = repository.findById(id);
+	public User findById(Long id) {    
 		verifyUserExistence(id);
-		return userOptional.get();
+		Optional<User> userOptional = repository.findById(id);
+		User user = userOptional.get();
+		return user;
 	}
 
 	/*
@@ -98,16 +107,16 @@ public class UserService implements Serializable {
 
 			return userByEmailOptional.get();
 		}
-		throw new ConstraintException("O email: " + email + " não é um email válido");
+		throw new BusinessException("O email: " + email + " não é um email válido");
 	}
 
 	/*
 	 * método que verifica se usuário existe
 	 */
-	private void verifyUserExistence(Long id) {
+	private void verifyUserExistence(Long id) {      
 
 		if (id.equals(null)) {
-			throw new ConstraintException("O id deve ser informato");
+			throw new ObjectNotFoundException("O id deve ser informado");
 		}
 
 		Optional<User> userDataBase = repository.findById(id);
@@ -120,11 +129,11 @@ public class UserService implements Serializable {
 	/*
 	 * método que verifica se tal email existe na base de dados
 	 */
-	private void verifyEmailExistence(String email) {  
+	private void verifyEmailExistence(String email) {         
 
 		if (!isValidEmailAddress(email)) {
 
-			throw new ConstraintException("O email: " + email + " não é um email válido.");
+		throw new BusinessException("O email: " + email + " não é um email válido.");
 		}
 
 		List<User> listUsers = new ArrayList<>();
@@ -143,11 +152,7 @@ public class UserService implements Serializable {
 	/*
 	 * método para saber se a sintaxe do email fornecido pelo usuário é válido.
 	 */
-	private static boolean isValidEmailAddress(String email) { 
-
-		if (email.length() < 12) {
-			throw new ConstraintException("O email informado deve ter no mínimo 12 letras.");
-		}
+	private static boolean isValidEmailAddress(String email) {  
 
 		boolean isEmailValid = false;
 
@@ -165,39 +170,22 @@ public class UserService implements Serializable {
 	/*
 	 * método para buscar uma lista de usuários por nome
 	 */
-	public List<User> listAllUsersByName(String name) { 
+	public Page<User> listAllUsersByName(String name, Pageable pagination) {   
 
-		List<User> listDataBase = new ArrayList<>();
-
-		listDataBase = repository.findByName(name);
+		Page<User> listDataBase = repository.findByName(name, pagination);
 
 		if (listDataBase.isEmpty()) {
-			throw new ObjectNotFoundException("Nenhum usuário cadastrado no momento.");
+			throw new ObjectNotFoundException("O usuário com o nome: " + name + ", não consta na base de dados.");
 		}
 
 		return listDataBase;
 	}
 
 	/*
-	 * Verifica se a data de atualização é válida
-	 */
-	private void verifyDateValidUpdate(LocalDateTime date) { 
-
-		if (date.toString().isBlank()) {
-			throw new ConstraintException("A data de atualização deve ser informada, verifique.");
-		}
-
-		if (date.isAfter(LocalDateTime.now()) || date.isBefore(LocalDateTime.now())) {
-			throw new ConstraintException("A data de atualização inserida não é uma data válida, verifique.");
-		}
-
-	}
-	
-	/*
 	 * Método para validar um usuario no update
 	 * 
 	 */
-	private void validUserUpdate(User user) {   
+	private void validUserUpdate(User user) {       
 
 		verifyUserExistence(user.getId());
 		
@@ -214,26 +202,8 @@ public class UserService implements Serializable {
 		
 		isValidEmailAddress(user.getEmail());
 		
-		verifyDateValidUpdate(user.getDtRegisterUpdate());
-
-		if (user.getName().isBlank()) {
-			throw new ConstraintException("O nome do usuário deve ser informado. Verifique");
-		}
-
-		if (user.getName().length() < 2) {
-			throw new ConstraintException("O nome do usuário deve ter no mínimo 02 letras");
-		}
-		
-		if (user.getPassword().isBlank()) {
-			throw new ConstraintException("A senha deve ser informada. Verifique.");
-		}
-
-		if (user.getPassword().length() < 6) {
-			throw new ConstraintException("A senha informada deve ter no mínimo 6 caracteres. Verifique.");
-		}
-		
-		if (user.getRoles().toString().isBlank()) {
-			throw new ConstraintException("O perfil do usuário deve ser informado. Verifique.");
+		if (user.getProfiles().toString().isBlank()) {
+			throw new BusinessException("O perfil do usuário deve ser informado. Verifique.");
 		}
 		
 		

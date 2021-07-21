@@ -12,15 +12,15 @@ import javax.validation.constraints.Size;
 import com.rogerioreis.anuncio02.entity.Profile;
 import com.rogerioreis.anuncio02.entity.User;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserInsertDto implements Serializable {
+public class UserUpdateDto implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	
+	@NotBlank(message = "Informe o id do cliente para alterar.")
+	private String id;
 
 	@NotBlank(message = "O preenchimento do campo nome é obrigatório.")  
 	@Size (min = 3, message = "O nome deve ter no mínimo 03 letras.")
@@ -35,14 +35,25 @@ public class UserInsertDto implements Serializable {
 	@Size(min = 6, message ="A senha deve ter no mínimo 06 dígitos.")
 	private String password;
 	
-	private LocalDateTime dtRegister = LocalDateTime.now();
+	private boolean active;
+	
+	private LocalDateTime dtRegister;
+	
+	private LocalDateTime dtRegisterUpdate = LocalDateTime.now();
 	
 	private List<Profile> profiles = new ArrayList<>();
+	
+	public UserUpdateDto () {
+		
+	}
 
-	public UserInsertDto(User userReturnDataBase) {
+	public UserUpdateDto(User userReturnDataBase) {
 		this.name = userReturnDataBase.getName();
 		this.email = userReturnDataBase.getEmail();
 		this.password = userReturnDataBase.getPassword();
+		this.active = userReturnDataBase.isActive();
+		this.dtRegister = userReturnDataBase.getDtRegister();
+		this.dtRegisterUpdate = userReturnDataBase.getDtRegisterUpdate();
 		this.profiles = userReturnDataBase.getProfiles();		
 	}
 

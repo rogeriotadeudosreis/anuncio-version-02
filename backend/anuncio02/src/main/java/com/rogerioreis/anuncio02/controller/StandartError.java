@@ -6,51 +6,42 @@ import java.time.LocalDateTime;
 public class StandartError implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
+	private LocalDateTime dateSystem;
 	private String title;
-	private Integer status;
+	private String field;
 	private String message;
-	private String path;
-	private LocalDateTime timestamp;
-	
+	private String classPath;
+
 	public StandartError() {
-		
 	}
 
-	public StandartError(LocalDateTime timesTamp, Integer status, String error, String message, String path) {
-		super();
-		this.timestamp = timesTamp;
-		this.status = status;
-		this.title = error;
+	public StandartError(LocalDateTime dateSystem, String title, String field, String message, String classPath) {
+		this.dateSystem = dateSystem;
+		this.title = title;
+		this.field = field;
 		this.message = message;
-		this.path = path;
+		this.classPath = classPath;
 	}
 
-	public LocalDateTime getTimestamp() {
-		return timestamp;
+	public LocalDateTime getDateSystem() {
+		return dateSystem;
 	}
 
-	public Integer getStatus() {
-		return status;
-	}
-
-	public String getTitle() {
-		return title;
+	public String getField() {
+		return field;
 	}
 
 	public String getMessage() {
 		return message;
 	}
 
-	public String getPath() {
-		return path;
+	public String getTitle() {
+		return title;
 	}
 	
-
-
-	
-	
-	
-	
+	public String getClassPath() {
+		return classPath;
+	}
 
 }

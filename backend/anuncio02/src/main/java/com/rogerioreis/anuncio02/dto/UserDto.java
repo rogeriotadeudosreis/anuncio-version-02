@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rogerioreis.anuncio02.entity.Role;
+import com.rogerioreis.anuncio02.entity.Profile;
 import com.rogerioreis.anuncio02.entity.User;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class UserDto implements Serializable {
 	private Long id;
 	private String name;
 	private String email;
-	private List<Role> roles = new ArrayList<>();
+	private List<Profile> profiles = new ArrayList<>();
 	private boolean active;
 	private LocalDateTime dataRegister;
 	private LocalDateTime dataRegisterUpdate;
@@ -31,7 +31,7 @@ public class UserDto implements Serializable {
 		this.id = userReturnDataBase.getId();
 		this.name = userReturnDataBase.getName();
 		this.email = userReturnDataBase.getEmail();
-		this.roles = userReturnDataBase.getRoles();
+		this.profiles = userReturnDataBase.getProfiles();
 		this.active = userReturnDataBase.isActive();
 		this.dataRegister = userReturnDataBase.getDtRegister();
 		this.dataRegisterUpdate = userReturnDataBase.getDtRegisterUpdate();
