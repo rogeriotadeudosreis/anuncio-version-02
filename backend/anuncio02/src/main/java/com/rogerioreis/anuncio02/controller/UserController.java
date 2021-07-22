@@ -7,6 +7,8 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -47,6 +49,8 @@ public class UserController {
 
 	@PostMapping
 	@ApiOperation(value = "Método de inserir um usuário")
+	@Transactional
+	@CacheEvict(value = "listOfUsers", allEntries = true)
 	public ResponseEntity<UserDto> create(@Valid @RequestBody UserInsertDto userForm,
 			UriComponentsBuilder uriBuilder) {
 
@@ -63,6 +67,7 @@ public class UserController {
 	@PutMapping(value = "/{id}")
 	@ApiOperation(value = "Método para Atualizar um usuário.")
 	@Transactional
+	@CacheEvict(value = "listOfUsers", allEntries = true)
 	public ResponseEntity<UserDto> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDto userForm,
 			UriComponentsBuilder uriBuilder) {
 
@@ -73,10 +78,11 @@ public class UserController {
 		return ResponseEntity.ok(new UserDto(userAtualizado));
 
 	}
-
+	
 	@GetMapping
 	@ApiOperation(value = "Método para consultar todos usuários na base de dados.")
-	public ResponseEntity<Page<UserDto>> getAll(@RequestParam(required = false) String name, 
+	@Cacheable(value = "listOfUsers")
+	public ResponseEntity<Page<UserDto>> getAll(@RequestParam(required = false) String name,  
 			@PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pagination) {
 
 		// aqui abaixo uma primeira forma de fazer ordenação
@@ -111,7 +117,7 @@ public class UserController {
 
 	@GetMapping(value = "/email/{email}")
 	@ApiOperation(value = "Método para consultar um usuário pelo email.")
-	public ResponseEntity<UserDto> getByEmail(@PathVariable String email) {
+	public ResponseEntity<UserDto> getByEmail(@PathVariable String email) { 
 
 		User userReceiver = service.findByEmail(email);
 
@@ -120,6 +126,8 @@ public class UserController {
 
 	@DeleteMapping(value = "/{id}")
 	@ApiOperation(value = "Método para deletar um usuário.")
+	@Transactional
+	@CacheEvict(value = "listOfUsers", allEntries = true)
 	public ResponseEntity<?> deletarUsuario(@PathVariable Long id) {
 
 		service.delete(id);

@@ -45,7 +45,7 @@ public class UserService implements Serializable {
 	/*
 	 * Criando um usuário na base de dados
 	 */
-	public User createUser(User user) {       
+	public User createUser(User user) {        
 
 		verifyEmailExistence(user.getEmail());
 
@@ -57,7 +57,7 @@ public class UserService implements Serializable {
 	/*
 	 * Atualizando um usuário
 	 */
-	public User updateUser(User user) {  
+	public User updateUser(User user) {   
 		
 		this.validUserUpdate(user);
 		
