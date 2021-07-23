@@ -1,6 +1,6 @@
 package com.rogerioreis.anuncio02.service;
 
-import java.io.Serializable;
+import java.io.Serializable; 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +45,7 @@ public class UserService implements Serializable {
 	/*
 	 * Criando um usuário na base de dados
 	 */
-	public User createUser(User user) {        
+	public User createUser(User user) {         
 
 		verifyEmailExistence(user.getEmail());
 
@@ -57,7 +57,7 @@ public class UserService implements Serializable {
 	/*
 	 * Atualizando um usuário
 	 */
-	public User updateUser(User user) {   
+	public User updateUser(User user) {    
 		
 		this.validUserUpdate(user);
 		
@@ -77,7 +77,7 @@ public class UserService implements Serializable {
 	/*
 	 * Deletando um usuário na base de dados
 	 */
-	public void delete(Long id) {
+	public void delete(Long id) { 
 		verifyUserExistence(id);
 		repository.deleteById(id);
 	}
@@ -85,7 +85,7 @@ public class UserService implements Serializable {
 	/*
 	 * Buscando um usuário pelo id
 	 */
-	public User findById(Long id) {    
+	public User findById(Long id) {     
 		verifyUserExistence(id);
 		Optional<User> userOptional = repository.findById(id);
 		User user = userOptional.get();
@@ -95,7 +95,7 @@ public class UserService implements Serializable {
 	/*
 	 * Buscando um usuário na base de dados pelo email
 	 */
-	public User findByEmail(String email) { 
+	public User findByEmail(String email) {  
 
 		if (isValidEmailAddress(email)) {
 
@@ -129,7 +129,7 @@ public class UserService implements Serializable {
 	/*
 	 * método que verifica se tal email existe na base de dados
 	 */
-	private void verifyEmailExistence(String email) {         
+	private void verifyEmailExistence(String email) {          
 
 		if (!isValidEmailAddress(email)) {
 

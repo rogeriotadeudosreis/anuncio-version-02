@@ -15,7 +15,7 @@ public class Anuncio02Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Anuncio02Application.class, args);
-		//System.out.println("Senha do primeiro usuário: ---> " + new BCryptPasswordEncoder().encode("123456"));
+		System.out.println("Senha do primeiro usuário: ---> " + new BCryptPasswordEncoder().encode("123456"));
 	}
 
 }

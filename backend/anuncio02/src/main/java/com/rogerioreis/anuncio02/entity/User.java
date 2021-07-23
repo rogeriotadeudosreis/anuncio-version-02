@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,8 +44,9 @@ public class User implements UserDetails {
 
 	private String password = "";
 
-	@ManyToMany
-	@JoinTable(name = "tb_users_profiles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"))
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "tb_users_profiles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"))
 	private List<Profile> profiles = new ArrayList<>();
 
 	private boolean active = false;
