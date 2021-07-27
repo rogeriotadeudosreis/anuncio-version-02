@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "anuncio02.jwt.expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'anuncio02.jwt.expiration'"
+  },
+  {
+    "name": "anuncio02.jwt.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'anuncio02.jwt.secret'"
+  }
+]}
