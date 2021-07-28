@@ -14,7 +14,7 @@ const routes: Routes = [
     component: UserCrudComponent,
   },
   {
-    path: "user/create",
+    path: "users/create",
     component: UserCreateComponent
   }
 ];

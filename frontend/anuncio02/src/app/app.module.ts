@@ -17,7 +17,7 @@ import { UserCrudComponent } from './views/user-crud/user-crud.component';
 import { RedDirective } from './directives/red.directive';
 import { ForDirective } from './directives/for.directive';
 import { UserCreateComponent } from './components/user/user-create/user-create.component';
-
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -38,7 +38,8 @@ import { UserCreateComponent } from './components/user/user-create/user-create.c
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
-    MatCardModule
+    MatCardModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
