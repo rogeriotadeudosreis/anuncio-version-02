@@ -1,3 +1,5 @@
+import { Profile } from "../profile/profile.model";
+
 export interface User {
     id?: number
     name: string
