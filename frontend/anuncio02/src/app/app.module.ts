@@ -18,6 +18,7 @@ import { RedDirective } from './directives/red.directive';
 import { ForDirective } from './directives/for.directive';
 import { UserCreateComponent } from './components/user/user-create/user-create.component';
 import { MatButtonModule } from '@angular/material/button';
+import { ProfileCreateComponent } from './components/profile/profile-create/profile-create.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { MatButtonModule } from '@angular/material/button';
     UserCrudComponent,
     RedDirective,
     ForDirective,
-    UserCreateComponent
+    UserCreateComponent,
+    ProfileCreateComponent
   ],
   imports: [
     BrowserModule,
