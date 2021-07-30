@@ -26,6 +26,7 @@ import { HttpClientModule } from '@Angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { UserReadComponent } from './components/user/user-read/user-read.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { MatInputModule } from '@angular/material/input';
     RedDirective,
     ForDirective,
     UserCreateComponent,
-    ProfileCreateComponent
+    ProfileCreateComponent,
+    UserReadComponent
   ],
   imports: [
     BrowserModule,
