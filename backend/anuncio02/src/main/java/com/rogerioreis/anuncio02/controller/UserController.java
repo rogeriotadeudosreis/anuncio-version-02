@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,8 +38,8 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/anuncio02/user")
-@Api(value = "API anúncio de imóveis protótipo")
 @CrossOrigin(origins = "*")
+@Api(value = "API anúncio de imóveis protótipo")
 public class UserController {
 
 	@Autowired

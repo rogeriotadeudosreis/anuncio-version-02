@@ -23,6 +23,11 @@ import { ProfileCreateComponent } from './components/profile/profile-create/prof
 
 import { HttpClientModule } from '@Angular/common/http';
 
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +51,10 @@ import { HttpClientModule } from '@Angular/common/http';
     MatCardModule,
     MatButtonModule,
     MatSnackBarModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]
