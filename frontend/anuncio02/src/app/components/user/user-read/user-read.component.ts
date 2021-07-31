@@ -11,12 +11,12 @@ export class UserReadComponent implements OnInit {
 
   users: User[]
 
-  constructor(private userService:  UserService) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.userService.read().subscribe(users => {
-      this.users = users
-      console.log(users)
+    this.userService.read().subscribe((resposta) => {
+      this.users = resposta
+      console.log(this.users)
     })
   }
 
