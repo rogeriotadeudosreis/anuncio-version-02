@@ -31,6 +31,7 @@ import { UserRead2Component } from './components/user/user-read2/user-read2.comp
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { UserUpdateComponent } from './components/user/user-update/user-update.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { MatSortModule } from '@angular/material/sort';
     UserCreateComponent,
     ProfileCreateComponent,
     UserReadComponent,
-    UserRead2Component
+    UserRead2Component,
+    UserUpdateComponent
   ],
   imports: [
     BrowserModule,

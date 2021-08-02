@@ -41,7 +41,7 @@
 <!-- DataRegisterUpdate Column -->
 <ng-container matColumnDef="dataRegisterUpdate">
         <th mat-header-cell *matHeaderCellDef >RegisterUpdate</th>
-        <td mat-cell *matCellDef="let row">{{row.dataRegisterUpdate}}</td>
+        <td mat-cell *matCellDef="let row">{{row.dataRegisterUpdate | date:'dd-MM-yyyy HH:MM:SS'}}</td>
       </ng-container>
 
 <!-- Profile Column -->
@@ -54,14 +54,16 @@
 <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef >Actions</th>
         <td mat-cell *matCellDef="let row">
-          <a routerLink=""></a>
+          <a routerLink="/user/update/{{row.id}}">
           <i class="material-icons edit">
             edit
           </i>
-          <a routerLink=""></a>
+        </a>
+          <a routerLink="">
           <i class="material-icons delete">
             delete
           </i>
+        </a>
         </td>
       </ng-container>
 
