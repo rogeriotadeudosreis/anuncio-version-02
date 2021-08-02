@@ -11,7 +11,7 @@ import { User } from '../user.model';
 export class UserReadComponent implements OnInit {
   
   users: User[];
-  displayedColumns = ['id','name','email','dataRegister','dataRegisterUpdate','active','profiles'];
+  displayedColumns = ['id','name','email','dataRegister','dataRegisterUpdate','active','profiles','action'];
   
   constructor(
     private userService: UserService,

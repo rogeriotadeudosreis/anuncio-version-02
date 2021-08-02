@@ -5,3 +5,15 @@ table {
 button {
     margin-left: 15px;
 }
+
+.edit {
+    margin-right: 15px;
+}
+
+i.edit {
+    color:sienna    
+}
+
+i.delete{
+    color: red;
+}

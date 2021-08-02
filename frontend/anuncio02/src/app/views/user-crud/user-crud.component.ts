@@ -13,9 +13,7 @@ export class UserCrudComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  navigateToUserCreate(): void {
-    this.router.navigate(['/users/create'])
-  }
+ 
   
   
 
