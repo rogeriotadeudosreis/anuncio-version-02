@@ -84,7 +84,7 @@ public class UserController {
 	@ApiOperation(value = "Método para consultar todos usuários na base de dados.")
 	@Cacheable(value = "listOfUsers")
 	public ResponseEntity<Page<UserDto>> getAll(@RequestParam(required = false) String name,    
-			@PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pagination) {
+			@PageableDefault(sort = "name", direction = Direction.ASC, page = 0, size = 10) Pageable pagination) {
 
 		// aqui abaixo uma primeira forma de fazer ordenação
 //	public ResponseEntity<Page<UserDto>> getAll(@RequestParam(required = false) String name,

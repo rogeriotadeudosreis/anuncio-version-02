@@ -27,6 +27,10 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UserReadComponent } from './components/user/user-read/user-read.component';
+import { UserRead2Component } from './components/user/user-read2/user-read2.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
@@ -41,7 +45,8 @@ import { UserReadComponent } from './components/user/user-read/user-read.compone
     ForDirective,
     UserCreateComponent,
     ProfileCreateComponent,
-    UserReadComponent
+    UserReadComponent,
+    UserRead2Component
   ],
   imports: [
     BrowserModule,
@@ -56,7 +61,10 @@ import { UserReadComponent } from './components/user/user-read/user-read.compone
     HttpClientModule,
     FormsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
   providers: [],
   bootstrap: [AppComponent]
