@@ -69,7 +69,7 @@ public class UserController {
 	@ApiOperation(value = "Método para Atualizar um usuário.")
 	@Transactional
 	@CacheEvict(value = "listOfUsers", allEntries = true)
-	public ResponseEntity<UserDto> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDto userForm, 
+	public ResponseEntity<UserDto> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDto userForm,  
 			UriComponentsBuilder uriBuilder) {
 
 		User userReceiver = modelMapper.map(userForm, User.class);
@@ -109,7 +109,7 @@ public class UserController {
 
 	@GetMapping(value = "/{id}")
 	@ApiOperation(value = "Método para consultar um usuário pelo id.")
-	public ResponseEntity<UserDto> getById(@PathVariable Long id) { 
+	public ResponseEntity<UserDto> getById(@PathVariable Long id) {  
 
 		User userReceiver = service.findById(id);
 

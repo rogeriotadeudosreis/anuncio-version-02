@@ -21,6 +21,7 @@ public class UserDto implements Serializable {
 	private Long id;
 	private String name;
 	private String email;
+	private String password;
 	private List<Profile> profiles = new ArrayList<>();
 	private boolean active;
 	private LocalDateTime dataRegister;
@@ -31,6 +32,7 @@ public class UserDto implements Serializable {
 		this.id = userReturnDataBase.getId();
 		this.name = userReturnDataBase.getName();
 		this.email = userReturnDataBase.getEmail();
+		this.password = userReturnDataBase.getPassword();
 		this.profiles = userReturnDataBase.getProfiles();
 		this.active = userReturnDataBase.isActive();
 		this.dataRegister = userReturnDataBase.getDtRegister();
