@@ -1,14 +1,15 @@
+import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../user.model';
 import { UserService } from '../user.service';
 
 @Component({
-  selector: 'app-user-update',
-  templateUrl: './user-update.component.html',
-  styleUrls: ['./user-update.component.css'],
+  selector: 'app-user-delete',
+  templateUrl: './user-delete.component.html',
+  styleUrls: ['./user-delete.component.css'],
 })
-export class UserUpdateComponent implements OnInit {
+export class UserDeleteComponent implements OnInit {
   user: User;
 
   constructor(
@@ -24,13 +25,14 @@ export class UserUpdateComponent implements OnInit {
     });
   }
 
-  updateUser(): void {
-    this.userService.update(this.user).subscribe(() => {
-      this.userService.showMensagem('Usuário atualizado !');
+  deleteUser(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.userService.delete(id).subscribe(() => {
+      this.userService.showMensagem('Registro deletado !');
       this.router.navigate(['/users']);
     });
   }
-  
+
   cancel(): void {
     this.router.navigate(['/users']);
   }

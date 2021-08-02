@@ -32,6 +32,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { UserUpdateComponent } from './components/user/user-update/user-update.component';
+import { UserDeleteComponent } from './components/user/user-delete/user-delete.component';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { UserUpdateComponent } from './components/user/user-update/user-update.c
     ProfileCreateComponent,
     UserReadComponent,
     UserRead2Component,
-    UserUpdateComponent
+    UserUpdateComponent,
+    UserDeleteComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +68,7 @@ import { UserUpdateComponent } from './components/user/user-update/user-update.c
     MatInputModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

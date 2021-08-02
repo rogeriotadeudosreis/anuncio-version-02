@@ -1,8 +1,8 @@
-import { map } from 'rxjs/operators';
-import { HttpClient } from '@Angular/common/http';
+import { catchError, map, retry } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@Angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
+import { empty, Observable, throwError } from 'rxjs';
 import { User } from './user.model';
 
 @Injectable({
@@ -22,7 +22,9 @@ export class UserService {
   }
 
   create(user: User): Observable<User> {
-    return this.http.post<User>(this.baseUrl, user);
+    return this.http.post<User>(this.baseUrl, user)
+    .pipe(retry(1),
+    catchError(this.handleError));
   }
 
   read(): Observable<User[]> {
@@ -38,4 +40,24 @@ export class UserService {
     const url = `${this.baseUrl}/${user.id}`;
     return this.http.put<User>(url, user);
   }
+
+  delete(id: String): Observable<User> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.delete<User>(url);
+  }
+
+  // Manipulação de erros
+  handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Erro ocorreu no lado do client
+      errorMessage = error.error.message;
+    } else {
+      // Erro ocorreu no lado do servidor
+      errorMessage = `Código do erro: ${error.status}, ` + `menssagem: ${error.message}`;
+    }
+    this.showMensagem(errorMessage)
+    console.log(errorMessage);
+    return throwError(errorMessage);
+  };
 }
