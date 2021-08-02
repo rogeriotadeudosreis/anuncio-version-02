@@ -33,6 +33,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { UserUpdateComponent } from './components/user/user-update/user-update.component';
 import { UserDeleteComponent } from './components/user/user-delete/user-delete.component';
+import { LoginComponent } from './components/user/login/login.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { UserDeleteComponent } from './components/user/user-delete/user-delete.c
     UserReadComponent,
     UserRead2Component,
     UserUpdateComponent,
-    UserDeleteComponent
+    UserDeleteComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 import { NgModule, Component } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProfileCreateComponent } from './components/profile/profile-create/profile-create.component';
+import { LoginComponent } from './components/user/login/login.component';
 import { UserCreateComponent } from './components/user/user-create/user-create.component';
 import { UserDeleteComponent } from './components/user/user-delete/user-delete.component';
 import { UserUpdateComponent } from './components/user/user-update/user-update.component';
@@ -31,6 +32,10 @@ const routes: Routes = [
   {
     path: "user/delete/:id",
     component: UserDeleteComponent
+  },
+  {
+    path: "login",
+    component:LoginComponent
   }
 ];
 
