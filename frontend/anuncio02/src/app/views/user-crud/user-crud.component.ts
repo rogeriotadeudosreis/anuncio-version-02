@@ -17,8 +17,6 @@ export class UserCrudComponent implements OnInit {
     this.router.navigate(['/users/create'])
   }
   
-  navigateToProfileCreate(): void {
-    this.router.navigate(['/profiles/create'])
-  }
+  
 
 }
