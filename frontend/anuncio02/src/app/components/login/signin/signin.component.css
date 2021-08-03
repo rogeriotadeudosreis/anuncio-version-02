@@ -1,0 +1,20 @@
+.container {
+    width: 400px;
+    height: 400px;
+    text-align: center;
+    margin: 5% 0 0 35%;
+    background-color: sienna;
+    border-radius: 10px;
+}
+
+button {
+width: 208px;
+}
+
+.login {
+    color: rgb(204, 204, 204);
+}
+
+a {
+    color: white
+}

@@ -33,7 +33,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { UserUpdateComponent } from './components/user/user-update/user-update.component';
 import { UserDeleteComponent } from './components/user/user-delete/user-delete.component';
-import { LoginComponent } from './components/user/login/login.component';
+import { SigninComponent } from './components/login/signin/signin.component';
+import { AnnoucementReadComponent } from './components/annoucement/annoucement-read/annoucement-read.component';
+
+import { ReactiveFormsModule } from '@angular/forms';
+import { VmessageComponent } from './components/vmessage/vmessage/vmessage.component'
 
 
 @NgModule({
@@ -52,7 +56,10 @@ import { LoginComponent } from './components/user/login/login.component';
     UserRead2Component,
     UserUpdateComponent,
     UserDeleteComponent,
-    LoginComponent
+    SigninComponent,
+    AnnoucementReadComponent,
+    VmessageComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -71,6 +78,7 @@ import { LoginComponent } from './components/user/login/login.component';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
